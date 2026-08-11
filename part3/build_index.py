@@ -26,11 +26,11 @@ def build_vector_index():
     model = SentenceTransformer("all-MiniLM-L6-v2")
     
     texts = [c["text"] for c in chunks]
-    embeddings = model.encode(texts, show_progress_bar=True)
+    embeddings = model.encode(texts, show_progress_bar=True, normalize_embeddings=True)
     embedding_dim = embeddings.shape[1]
 
-    print("Building FAISS index...")
-    index = faiss.IndexFlatL2(embedding_dim)
+    print("Building FAISS index (Cosine Similarity)...")
+    index = faiss.IndexFlatIP(embedding_dim)
     index.add(np.array(embeddings).astype('float32'))
 
     # Save index and metadata

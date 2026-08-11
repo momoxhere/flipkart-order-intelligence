@@ -6,10 +6,11 @@ import numpy as np
 import torch
 import torch.nn as nn
 import torch.optim as optim
-from torch.utils.data import DataLoader, TensorDataset
+from torch.utils.data import DataLoader, TensorDataset, Subset
 from torchvision import datasets, transforms, models
 from torchvision.models import ResNet18_Weights
 from sklearn.metrics import confusion_matrix, classification_report
+from sklearn.model_selection import train_test_split
 from PIL import Image
 
 # Setup directories
@@ -181,3 +182,11 @@ print("\n--- Saving Final Model ---")
 backbone.fc = head
 torch.save(backbone.state_dict(), "models/product_classifier.pt")
 print("Full model successfully saved to models/product_classifier.pt")
+
+print("\n--- Performing Stratified Split ---")
+targets = full_train.targets.numpy()
+indices = np.arange(len(targets))
+train_idx, val_idx = train_test_split(indices, test_size=5000, random_state=42, stratify=targets)
+
+train_data = Subset(full_train, train_idx)
+val_data = Subset(full_train, val_idx)
