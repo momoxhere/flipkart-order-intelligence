@@ -1,0 +1,14 @@
+[
+  {"doc_id": "POL001", "text": "Apparel items can generally be returned within 14 days of delivery. The item must be unused and with original tags."},
+  {"doc_id": "POL002", "text": "Footwear return window is strictly 10 days from the delivery date. Shoes must not show outdoor wear marks."},
+  {"doc_id": "POL003", "text": "Electronics can be returned within 7 days. An unboxing video is mandatory for damaged electronics."},
+  {"doc_id": "POL004", "text": "Home and furniture items have a 15-day return policy. Assembly defects must be reported within 48 hours."},
+  {"doc_id": "POL005", "text": "Cash on Delivery (COD) refunds are processed within 5-7 business days after the returned item passes quality check. Bank account details must be provided via the tracking link."},
+  {"doc_id": "POL006", "text": "Prepaid order refunds are reversed to the original payment source. This usually reflects within 3-5 business days."},
+  {"doc_id": "POL007", "text": "Standard delivery SLA for metro cities is 2-4 business days. Non-metro deliveries take 5-7 business days."},
+  {"doc_id": "POL008", "text": "In case of delayed delivery beyond the SLA, customers are eligible for a priority support escalation. Shipping charges, if any, will be refunded for delays over 3 days."},
+  {"doc_id": "POL009", "text": "Reverse pickup is available for 95% of our serviceable pincodes. If your pincode is ineligible, you must self-ship the item."},
+  {"doc_id": "POL010", "text": "If you receive a physically damaged product, a reverse pickup will be arranged free of cost. You must report this within 24 hours of delivery."},
+  {"doc_id": "POL011", "text": "All returned products must be in their original condition. Missing accessories or tampered serial numbers will result in refund rejection."},
+  {"doc_id": "POL012", "text": "Certain categories like innerwear, customized items, and unsealed beauty products are strictly non-returnable. Please check the product page badge before ordering."}
+]
