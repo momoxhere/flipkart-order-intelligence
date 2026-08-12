@@ -1,0 +1,6 @@
+{
+  "t_star_rf": 0.5000000000000001,
+  "metric": "F1",
+  "model": "RandomForestClassifier",
+  "threshold_source": "held-out test predict_proba"
+}

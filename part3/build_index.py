@@ -16,8 +16,8 @@ def build_vector_index():
         sentences = [s.strip() + "." for s in doc["text"].split(".") if len(s.strip()) > 5]
         for i, sentence in enumerate(sentences):
             chunks.append({
-                "chunk_id": f"{doc['doc_id']}_C{i+1:02d}",
-                "document_id": doc["doc_id"],
+                "chunk_id": f"{doc['doc_id']}_chunk_{i+1:02d}",
+                "doc_id": doc["doc_id"],
                 "text": sentence
             })
 
@@ -26,11 +26,11 @@ def build_vector_index():
     model = SentenceTransformer("all-MiniLM-L6-v2")
     
     texts = [c["text"] for c in chunks]
-    embeddings = model.encode(texts, show_progress_bar=True, normalize_embeddings=True)
+    embeddings = model.encode(texts, show_progress_bar=True)
     embedding_dim = embeddings.shape[1]
 
-    print("Building FAISS index (Cosine Similarity)...")
-    index = faiss.IndexFlatIP(embedding_dim)
+    print("Building FAISS index (L2 distance)...")
+    index = faiss.IndexFlatL2(embedding_dim)
     index.add(np.array(embeddings).astype('float32'))
 
     # Save index and metadata

@@ -1,122 +1,242 @@
 [
   {
-    "chunk_id": "POL001_C01",
-    "document_id": "POL001",
-    "text": "Apparel items can generally be returned within 14 days of delivery."
+    "chunk_id": "POL001_chunk_01",
+    "doc_id": "POL001",
+    "text": "Apparel and footwear items can generally be returned within 10 days of delivery."
   },
   {
-    "chunk_id": "POL001_C02",
-    "document_id": "POL001",
-    "text": "The item must be unused and with original tags."
+    "chunk_id": "POL001_chunk_02",
+    "doc_id": "POL001",
+    "text": "The item should be unused, undamaged, and accompanied by the original packaging and tags."
   },
   {
-    "chunk_id": "POL002_C01",
-    "document_id": "POL002",
-    "text": "Footwear return window is strictly 10 days from the delivery date."
+    "chunk_id": "POL001_chunk_03",
+    "doc_id": "POL001",
+    "text": "Returns are accepted only if the product condition matches the return policy."
   },
   {
-    "chunk_id": "POL002_C02",
-    "document_id": "POL002",
-    "text": "Shoes must not show outdoor wear marks."
+    "chunk_id": "POL001_chunk_04",
+    "doc_id": "POL001",
+    "text": "Exceptions may apply for sale or clearance items."
   },
   {
-    "chunk_id": "POL003_C01",
-    "document_id": "POL003",
-    "text": "Electronics can be returned within 7 days."
+    "chunk_id": "POL002_chunk_01",
+    "doc_id": "POL002",
+    "text": "Electronics are generally eligible for return within 7 days of delivery."
   },
   {
-    "chunk_id": "POL003_C02",
-    "document_id": "POL003",
-    "text": "An unboxing video is mandatory for damaged electronics."
+    "chunk_id": "POL002_chunk_02",
+    "doc_id": "POL002",
+    "text": "Certain products may require verification of the reported defect before a return is approved."
   },
   {
-    "chunk_id": "POL004_C01",
-    "document_id": "POL004",
-    "text": "Home and furniture items have a 15-day return policy."
+    "chunk_id": "POL002_chunk_03",
+    "doc_id": "POL002",
+    "text": "All accessories, manuals, and packaging should be returned together."
   },
   {
-    "chunk_id": "POL004_C02",
-    "document_id": "POL004",
+    "chunk_id": "POL002_chunk_04",
+    "doc_id": "POL002",
+    "text": "Refunds depend on inspection results."
+  },
+  {
+    "chunk_id": "POL003_chunk_01",
+    "doc_id": "POL003",
+    "text": "Home and furniture items have a 15-day return policy from the delivery date."
+  },
+  {
+    "chunk_id": "POL003_chunk_02",
+    "doc_id": "POL003",
     "text": "Assembly defects must be reported within 48 hours."
   },
   {
-    "chunk_id": "POL005_C01",
-    "document_id": "POL005",
-    "text": "Cash on Delivery (COD) refunds are processed within 5-7 business days after the returned item passes quality check."
+    "chunk_id": "POL003_chunk_03",
+    "doc_id": "POL003",
+    "text": "The product should remain in resaleable condition."
   },
   {
-    "chunk_id": "POL005_C02",
-    "document_id": "POL005",
-    "text": "Bank account details must be provided via the tracking link."
+    "chunk_id": "POL003_chunk_04",
+    "doc_id": "POL003",
+    "text": "Large items may require reverse pickup coordination."
   },
   {
-    "chunk_id": "POL006_C01",
-    "document_id": "POL006",
+    "chunk_id": "POL004_chunk_01",
+    "doc_id": "POL004",
+    "text": "Cash on Delivery refunds are processed within 5-7 business days after the returned item passes quality check."
+  },
+  {
+    "chunk_id": "POL004_chunk_02",
+    "doc_id": "POL004",
+    "text": "Refunds are issued once the return is inspected and approved."
+  },
+  {
+    "chunk_id": "POL004_chunk_03",
+    "doc_id": "POL004",
+    "text": "Customers should provide valid bank account details via the tracking link."
+  },
+  {
+    "chunk_id": "POL004_chunk_04",
+    "doc_id": "POL004",
+    "text": "Delay may occur if information is incomplete."
+  },
+  {
+    "chunk_id": "POL005_chunk_01",
+    "doc_id": "POL005",
     "text": "Prepaid order refunds are reversed to the original payment source."
   },
   {
-    "chunk_id": "POL006_C02",
-    "document_id": "POL006",
-    "text": "This usually reflects within 3-5 business days."
+    "chunk_id": "POL005_chunk_02",
+    "doc_id": "POL005",
+    "text": "This usually reflects within 3-5 business days after the return is approved."
   },
   {
-    "chunk_id": "POL007_C01",
-    "document_id": "POL007",
+    "chunk_id": "POL005_chunk_03",
+    "doc_id": "POL005",
+    "text": "Refund timing depends on the bank or payment provider."
+  },
+  {
+    "chunk_id": "POL005_chunk_04",
+    "doc_id": "POL005",
+    "text": "Customers are notified once the refund is initiated."
+  },
+  {
+    "chunk_id": "POL006_chunk_01",
+    "doc_id": "POL006",
     "text": "Standard delivery SLA for metro cities is 2-4 business days."
   },
   {
-    "chunk_id": "POL007_C02",
-    "document_id": "POL007",
-    "text": "Non-metro deliveries take 5-7 business days."
+    "chunk_id": "POL006_chunk_02",
+    "doc_id": "POL006",
+    "text": "Non-metro deliveries typically take 5-7 business days."
   },
   {
-    "chunk_id": "POL008_C01",
-    "document_id": "POL008",
-    "text": "In case of delayed delivery beyond the SLA, customers are eligible for a priority support escalation."
+    "chunk_id": "POL006_chunk_03",
+    "doc_id": "POL006",
+    "text": "Delivery times are subject to holidays and logistics disruptions."
   },
   {
-    "chunk_id": "POL008_C02",
-    "document_id": "POL008",
-    "text": "Shipping charges, if any, will be refunded for delays over 3 days."
+    "chunk_id": "POL006_chunk_04",
+    "doc_id": "POL006",
+    "text": "Customers may receive updates if there are expected delays."
   },
   {
-    "chunk_id": "POL009_C01",
-    "document_id": "POL009",
-    "text": "Reverse pickup is available for 95% of our serviceable pincodes."
+    "chunk_id": "POL007_chunk_01",
+    "doc_id": "POL007",
+    "text": "If delivery is delayed beyond the SLA, customers are eligible for priority support escalation."
   },
   {
-    "chunk_id": "POL009_C02",
-    "document_id": "POL009",
-    "text": "If your pincode is ineligible, you must self-ship the item."
+    "chunk_id": "POL007_chunk_02",
+    "doc_id": "POL007",
+    "text": "Shipping charges may be refunded for delays exceeding 3 days."
   },
   {
-    "chunk_id": "POL010_C01",
-    "document_id": "POL010",
+    "chunk_id": "POL007_chunk_03",
+    "doc_id": "POL007",
+    "text": "Delay relief is assessed case-by-case."
+  },
+  {
+    "chunk_id": "POL007_chunk_04",
+    "doc_id": "POL007",
+    "text": "Customers should contact support with order details."
+  },
+  {
+    "chunk_id": "POL008_chunk_01",
+    "doc_id": "POL008",
+    "text": "Reverse pickup is available for most serviceable pincodes."
+  },
+  {
+    "chunk_id": "POL008_chunk_02",
+    "doc_id": "POL008",
+    "text": "If your pincode is ineligible, customers must self-ship the item back."
+  },
+  {
+    "chunk_id": "POL008_chunk_03",
+    "doc_id": "POL008",
+    "text": "Availability depends on location and courier partner coverage."
+  },
+  {
+    "chunk_id": "POL008_chunk_04",
+    "doc_id": "POL008",
+    "text": "Return labels may be provided when pickup is available."
+  },
+  {
+    "chunk_id": "POL009_chunk_01",
+    "doc_id": "POL009",
     "text": "If you receive a physically damaged product, a reverse pickup will be arranged free of cost."
   },
   {
-    "chunk_id": "POL010_C02",
-    "document_id": "POL010",
-    "text": "You must report this within 24 hours of delivery."
+    "chunk_id": "POL009_chunk_02",
+    "doc_id": "POL009",
+    "text": "You must report the damage within 24 hours of delivery."
   },
   {
-    "chunk_id": "POL011_C01",
-    "document_id": "POL011",
+    "chunk_id": "POL009_chunk_03",
+    "doc_id": "POL009",
+    "text": "Supporting photos or videos may be required."
+  },
+  {
+    "chunk_id": "POL009_chunk_04",
+    "doc_id": "POL009",
+    "text": "Refund or replacement depends on the inspection outcome."
+  },
+  {
+    "chunk_id": "POL010_chunk_01",
+    "doc_id": "POL010",
     "text": "All returned products must be in their original condition."
   },
   {
-    "chunk_id": "POL011_C02",
-    "document_id": "POL011",
-    "text": "Missing accessories or tampered serial numbers will result in refund rejection."
+    "chunk_id": "POL010_chunk_02",
+    "doc_id": "POL010",
+    "text": "Missing accessories, tampered serial numbers, or altered packaging can result in refund rejection."
   },
   {
-    "chunk_id": "POL012_C01",
-    "document_id": "POL012",
+    "chunk_id": "POL010_chunk_03",
+    "doc_id": "POL010",
+    "text": "The item should remain unused and undamaged."
+  },
+  {
+    "chunk_id": "POL010_chunk_04",
+    "doc_id": "POL010",
+    "text": "Returns are reviewed by quality check before approval."
+  },
+  {
+    "chunk_id": "POL011_chunk_01",
+    "doc_id": "POL011",
     "text": "Certain categories like innerwear, customized items, and unsealed beauty products are strictly non-returnable."
   },
   {
-    "chunk_id": "POL012_C02",
-    "document_id": "POL012",
+    "chunk_id": "POL011_chunk_02",
+    "doc_id": "POL011",
     "text": "Please check the product page badge before ordering."
+  },
+  {
+    "chunk_id": "POL011_chunk_03",
+    "doc_id": "POL011",
+    "text": "Non-returnable items cannot be returned unless there is a manufacturing defect."
+  },
+  {
+    "chunk_id": "POL011_chunk_04",
+    "doc_id": "POL011",
+    "text": "Policies are enforced for hygiene and customization reasons."
+  },
+  {
+    "chunk_id": "POL012_chunk_01",
+    "doc_id": "POL012",
+    "text": "Reverse pickup is available for 95% of serviceable pincodes."
+  },
+  {
+    "chunk_id": "POL012_chunk_02",
+    "doc_id": "POL012",
+    "text": "If your pincode is ineligible, you must self-ship the item."
+  },
+  {
+    "chunk_id": "POL012_chunk_03",
+    "doc_id": "POL012",
+    "text": "Pickup service depends on courier coverage and location."
+  },
+  {
+    "chunk_id": "POL012_chunk_04",
+    "doc_id": "POL012",
+    "text": "Customers are responsible for return logistics when pickup is unavailable."
   }
 ]

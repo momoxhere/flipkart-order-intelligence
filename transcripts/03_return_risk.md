@@ -1,12 +1,12 @@
 # Test 3
 
-**User:** What is the return risk for order 1234?
+**User:** What is the return risk for order 1001?
 
 **Agent JSON Response:**
 ```json
 {
-  "answer": "The return probability is 0.372 (Bucket: Medium).",
+  "answer": "The predicted return probability is 69.02%, which is classified as High risk.",
   "source": "return_risk_tool",
-  "confidence": 0.99
+  "confidence": 0.95
 }
 ```

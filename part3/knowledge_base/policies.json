@@ -1,14 +1,62 @@
 [
-  {"doc_id": "POL001", "text": "Apparel items can generally be returned within 14 days of delivery. The item must be unused and with original tags."},
-  {"doc_id": "POL002", "text": "Footwear return window is strictly 10 days from the delivery date. Shoes must not show outdoor wear marks."},
-  {"doc_id": "POL003", "text": "Electronics can be returned within 7 days. An unboxing video is mandatory for damaged electronics."},
-  {"doc_id": "POL004", "text": "Home and furniture items have a 15-day return policy. Assembly defects must be reported within 48 hours."},
-  {"doc_id": "POL005", "text": "Cash on Delivery (COD) refunds are processed within 5-7 business days after the returned item passes quality check. Bank account details must be provided via the tracking link."},
-  {"doc_id": "POL006", "text": "Prepaid order refunds are reversed to the original payment source. This usually reflects within 3-5 business days."},
-  {"doc_id": "POL007", "text": "Standard delivery SLA for metro cities is 2-4 business days. Non-metro deliveries take 5-7 business days."},
-  {"doc_id": "POL008", "text": "In case of delayed delivery beyond the SLA, customers are eligible for a priority support escalation. Shipping charges, if any, will be refunded for delays over 3 days."},
-  {"doc_id": "POL009", "text": "Reverse pickup is available for 95% of our serviceable pincodes. If your pincode is ineligible, you must self-ship the item."},
-  {"doc_id": "POL010", "text": "If you receive a physically damaged product, a reverse pickup will be arranged free of cost. You must report this within 24 hours of delivery."},
-  {"doc_id": "POL011", "text": "All returned products must be in their original condition. Missing accessories or tampered serial numbers will result in refund rejection."},
-  {"doc_id": "POL012", "text": "Certain categories like innerwear, customized items, and unsealed beauty products are strictly non-returnable. Please check the product page badge before ordering."}
+  {
+    "doc_id": "POL001",
+    "title": "Apparel and Footwear Returns",
+    "text": "Apparel and footwear items can generally be returned within 10 days of delivery. The item should be unused, undamaged, and accompanied by the original packaging and tags. Returns are accepted only if the product condition matches the return policy. Exceptions may apply for sale or clearance items."
+  },
+  {
+    "doc_id": "POL002",
+    "title": "Electronics Returns",
+    "text": "Electronics are generally eligible for return within 7 days of delivery. Certain products may require verification of the reported defect before a return is approved. All accessories, manuals, and packaging should be returned together. Refunds depend on inspection results."
+  },
+  {
+    "doc_id": "POL003",
+    "title": "Home and Furniture Returns",
+    "text": "Home and furniture items have a 15-day return policy from the delivery date. Assembly defects must be reported within 48 hours. The product should remain in resaleable condition. Large items may require reverse pickup coordination."
+  },
+  {
+    "doc_id": "POL004",
+    "title": "Cash on Delivery Refunds",
+    "text": "Cash on Delivery refunds are processed within 5-7 business days after the returned item passes quality check. Refunds are issued once the return is inspected and approved. Customers should provide valid bank account details via the tracking link. Delay may occur if information is incomplete."
+  },
+  {
+    "doc_id": "POL005",
+    "title": "Prepaid Refunds",
+    "text": "Prepaid order refunds are reversed to the original payment source. This usually reflects within 3-5 business days after the return is approved. Refund timing depends on the bank or payment provider. Customers are notified once the refund is initiated."
+  },
+  {
+    "doc_id": "POL006",
+    "title": "Standard Delivery SLA",
+    "text": "Standard delivery SLA for metro cities is 2-4 business days. Non-metro deliveries typically take 5-7 business days. Delivery times are subject to holidays and logistics disruptions. Customers may receive updates if there are expected delays."
+  },
+  {
+    "doc_id": "POL007",
+    "title": "Delayed Delivery Support",
+    "text": "If delivery is delayed beyond the SLA, customers are eligible for priority support escalation. Shipping charges may be refunded for delays exceeding 3 days. Delay relief is assessed case-by-case. Customers should contact support with order details."
+  },
+  {
+    "doc_id": "POL008",
+    "title": "Reverse Pickup Availability",
+    "text": "Reverse pickup is available for most serviceable pincodes. If your pincode is ineligible, customers must self-ship the item back. Availability depends on location and courier partner coverage. Return labels may be provided when pickup is available."
+  },
+  {
+    "doc_id": "POL009",
+    "title": "Damaged Product Reporting",
+    "text": "If you receive a physically damaged product, a reverse pickup will be arranged free of cost. You must report the damage within 24 hours of delivery. Supporting photos or videos may be required. Refund or replacement depends on the inspection outcome."
+  },
+  {
+    "doc_id": "POL010",
+    "title": "Return Condition Requirements",
+    "text": "All returned products must be in their original condition. Missing accessories, tampered serial numbers, or altered packaging can result in refund rejection. The item should remain unused and undamaged. Returns are reviewed by quality check before approval."
+  },
+  {
+    "doc_id": "POL011",
+    "title": "Non-Returnable Items",
+    "text": "Certain categories like innerwear, customized items, and unsealed beauty products are strictly non-returnable. Please check the product page badge before ordering. Non-returnable items cannot be returned unless there is a manufacturing defect. Policies are enforced for hygiene and customization reasons."
+  },
+  {
+    "doc_id": "POL012",
+    "title": "Serviceability and Pickup",
+    "text": "Reverse pickup is available for 95% of serviceable pincodes. If your pincode is ineligible, you must self-ship the item. Pickup service depends on courier coverage and location. Customers are responsible for return logistics when pickup is unavailable."
+  }
 ]

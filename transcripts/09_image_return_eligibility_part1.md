@@ -1,6 +1,6 @@
-# Test 4
+# Test 9a
 
-**User:** What category is 09_ankle_boot.png?
+**User:** Classify 09_ankle_boot.png.
 
 **Agent JSON Response:**
 ```json

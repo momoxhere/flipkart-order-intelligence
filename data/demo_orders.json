@@ -1,0 +1,72 @@
+{
+  "1001": {
+    "order_id": 1001,
+    "product_category": "Apparel",
+    "price_inr": 1499,
+    "discount_pct": 35.0,
+    "payment_method": "COD",
+    "customer_tenure_days": 120,
+    "num_previous_orders": 4,
+    "num_previous_returns": 2,
+    "delivery_distance_km": 180.0,
+    "delivery_days": 7,
+    "is_weekend_order": 1,
+    "rating_given": null
+  },
+  "1002": {
+    "order_id": 1002,
+    "product_category": "Electronics",
+    "price_inr": 24999,
+    "discount_pct": 10.0,
+    "payment_method": "Prepaid_Card",
+    "customer_tenure_days": 900,
+    "num_previous_orders": 20,
+    "num_previous_returns": 1,
+    "delivery_distance_km": 40.0,
+    "delivery_days": 3,
+    "is_weekend_order": 0,
+    "rating_given": 5.0
+  },
+  "1003": {
+    "order_id": 1003,
+    "product_category": "Home",
+    "price_inr": 799,
+    "discount_pct": 15.0,
+    "payment_method": "Prepaid_UPI",
+    "customer_tenure_days": 360,
+    "num_previous_orders": 8,
+    "num_previous_returns": 0,
+    "delivery_distance_km": 25.0,
+    "delivery_days": 4,
+    "is_weekend_order": 0,
+    "rating_given": 4.0
+  },
+  "1004": {
+    "order_id": 1004,
+    "product_category": "Footwear",
+    "price_inr": 2599,
+    "discount_pct": 25.0,
+    "payment_method": "Wallet",
+    "customer_tenure_days": 30,
+    "num_previous_orders": 1,
+    "num_previous_returns": 1,
+    "delivery_distance_km": 95.0,
+    "delivery_days": 5,
+    "is_weekend_order": 1,
+    "rating_given": null
+  },
+  "1005": {
+    "order_id": 1005,
+    "product_category": "Beauty",
+    "price_inr": 499,
+    "discount_pct": 5.0,
+    "payment_method": "NetBanking",
+    "customer_tenure_days": 540,
+    "num_previous_orders": 15,
+    "num_previous_returns": 3,
+    "delivery_distance_km": 8.0,
+    "delivery_days": 2,
+    "is_weekend_order": 0,
+    "rating_given": 4.0
+  }
+}
