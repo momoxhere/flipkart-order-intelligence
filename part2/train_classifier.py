@@ -100,7 +100,7 @@ def cache_features(loader, desc=""):
     with torch.no_grad():
         for i, (images, labels) in enumerate(loader):
             images = images.to(device)
-            outputs = model(images)
+            outputs = feature_extractor(images)
             features_list.append(outputs.cpu())
             labels_list.append(labels)
             if (i+1) % 50 == 0:
@@ -120,7 +120,7 @@ cached_val = DataLoader(TensorDataset(val_features, val_labels), batch_size=batc
 # 4. Train the Classifier Head
 # ==========================================
 print("\n--- Training Classifier Head ---")
-classifier = nn.Linear(in_features, 10).to(device)
+classifier = nn.Linear(num_ftrs, 10).to(device)
 criterion = nn.CrossEntropyLoss()
 optimizer = optim.Adam(classifier.parameters(), lr=1e-3)
 
@@ -191,7 +191,7 @@ print("Classification Report saved to part2/results/classification_report.txt")
 # ==========================================
 print("\n--- Saving Final Model ---")
 final_model = models.resnet18(weights=ResNet18_Weights.IMAGENET1K_V1)
-final_model.fc = nn.Linear(in_features, 10)
+final_model.fc = nn.Linear(num_ftrs, 10)
 final_model.load_state_dict(feature_extractor.state_dict(), strict=False)
 final_model.fc.weight.data.copy_(classifier.weight.data)
 final_model.fc.bias.data.copy_(classifier.bias.data)
