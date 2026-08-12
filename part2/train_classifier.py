@@ -84,13 +84,13 @@ test_loader = DataLoader(test_data, batch_size=batch_size, shuffle=False)
 # 3. Transfer Learning & Feature Caching
 # ==========================================
 print("\n--- Initializing ResNet-18 ---")
-model = models.resnet18(weights=ResNet18_Weights.IMAGENET1K_V1)
-for param in model.parameters():
+backbone = models.resnet18(weights=ResNet18_Weights.IMAGENET1K_V1)
+for param in backbone.parameters():
     param.requires_grad = False
 
-in_features = model.fc.in_features
-model.fc = nn.Identity()  # Remove the final layer to extract features
-feature_extractor = model.to(device)
+num_ftrs = backbone.fc.in_features
+backbone.fc = nn.Identity()  # Remove the final layer to extract features
+feature_extractor = backbone.to(device)
 feature_extractor.eval()
 
 def cache_features(loader, desc=""):

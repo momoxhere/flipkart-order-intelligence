@@ -65,19 +65,10 @@ def get_order_features(order_id: str):
     return DEMO_ORDERS[order_id]
 
 
-FEW_SHOT_INTENT_EXAMPLES = [
-    {
-        "user": "Can I return these shoes?",
-        "intent": "policy"
-    },
-    {
-        "user": "Is order 1001 likely to be returned?",
-        "intent": "return_risk"
-    },
-    {
-        "user": "What category is 09_ankle_boot.png?",
-        "intent": "image_classification"
-    }
+FEW_SHOT_EXAMPLES = [
+    ("Can I return this pair of shoes?", "policy"),
+    ("Is order 1234 likely to be returned?", "return_risk"),
+    ("What category is 07_sneaker.png?", "image_classification")
 ]
 
 
@@ -100,13 +91,17 @@ IMAGE_PATTERNS = [
 
 
 def mock_llm_intent(query: str) -> str:
-    """Deterministic intent routing equivalent to FEW_SHOT_INTENT_EXAMPLES.
+    """Deterministic intent routing based on explicit few-shot examples.
 
-    These rules make the examples actually matter by giving the agent a
-    deterministic, mock LLM classifier rather than leaving the examples
-    unused in a comment.
+    The few-shot examples are now encoded directly and drive the mock LLM
+    classification logic, rather than only being present in comments.
     """
     q = query.lower()
+
+    # Exact few-shot intent matches
+    for example, intent in FEW_SHOT_EXAMPLES:
+        if example.lower() == q:
+            return intent
 
     if any(pattern in q for pattern in RISK_PATTERNS):
         return "return_risk"
