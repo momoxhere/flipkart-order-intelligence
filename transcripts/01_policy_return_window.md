@@ -1,12 +1,12 @@
 # Test 1
 
-**User:** How long do I have to return footwear?
+**User:** What is the return window for footwear?
 
 **Agent JSON Response:**
 ```json
 {
-  "answer": "Footwear return window is strictly 10 days from the delivery date.",
+  "answer": "Apparel and footwear items can generally be returned within 10 days of delivery.",
   "source": "policy_kb",
-  "confidence": 0.95
+  "confidence": 0.9
 }
 ```

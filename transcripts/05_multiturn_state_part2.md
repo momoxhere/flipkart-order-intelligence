@@ -1,12 +1,12 @@
 # Test 5b
 
-**User:** What about its category?
+**User:** What is its return risk?
 
 **Agent JSON Response:**
 ```json
 {
-  "answer": "The image is classified as Ankle boot.",
-  "source": "image_classifier_tool",
-  "confidence": 0.9726
+  "answer": "The predicted return probability is 69.02%, which is classified as High risk.",
+  "source": "return_risk_tool",
+  "confidence": 0.95
 }
 ```

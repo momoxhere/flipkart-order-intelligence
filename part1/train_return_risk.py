@@ -1,5 +1,6 @@
 # part1/train_return_risk.py
 import os
+import json
 import joblib
 import pandas as pd
 import numpy as np
@@ -137,8 +138,8 @@ grid = GridSearchCV(rf_pipeline, param_grid, cv=cv, scoring='roc_auc', n_jobs=-1
 grid.fit(X_train, y_train)
 
 best_rf = grid.best_estimator_
-rf_probs = best_rf.predict_proba(X_test)[:, 1]
-rf_roc_auc_test = roc_auc_score(y_test, rf_probs)
+rf_test_proba = best_rf.predict_proba(X_test)[:, 1]
+rf_roc_auc_test = roc_auc_score(y_test, rf_test_proba)
 
 print(f"Best Parameters: {grid.best_params_}")
 print(f"CV ROC-AUC: {grid.best_score_:.4f}")
@@ -151,11 +152,24 @@ print(f"Difference (CV - Test): {grid.best_score_ - rf_roc_auc_test:.4f}")
 best_rf_f1 = 0
 t_star_rf = 0.5
 for t in thresholds:
-    preds = (rf_probs >= t).astype(int)
+    preds = (rf_test_proba >= t).astype(int)
     f1 = f1_score(y_test, preds)
     if f1 > best_rf_f1:
         best_rf_f1 = f1
         t_star_rf = t
+
+os.makedirs("part1/results", exist_ok=True)
+with open("part1/results/rf_threshold.json", "w") as f:
+    json.dump(
+        {
+            "t_star_rf": float(t_star_rf),
+            "metric": "F1",
+            "model": "RandomForestClassifier",
+            "threshold_source": "held-out test predict_proba"
+        },
+        f,
+        indent=2
+    )
 
 print(f"\nOptimal RF Threshold t*_rf: {t_star_rf:.2f} (F1: {best_rf_f1:.4f})")
 
@@ -204,7 +218,7 @@ print(compare_df)
 # 8. Subgroup Analysis
 # ==========================================
 subgroup_results = []
-rf_preds = (rf_probs >= t_star_rf).astype(int) # using optimal threshold for predictions
+rf_preds = (rf_test_proba >= t_star_rf).astype(int) # using optimal threshold for predictions
 
 # By product category
 for cat in X_test['product_category'].unique():

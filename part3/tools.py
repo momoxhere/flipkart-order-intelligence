@@ -1,37 +1,59 @@
 # part3/tools.py
+from pathlib import Path
+import json
 import joblib
 import pandas as pd
 import torch
 from torchvision import models, transforms
 from PIL import Image
 
+ROOT = Path(__file__).resolve().parents[1]
+MODEL_PATH = ROOT / "models" / "return_risk_model.pkl"
+THRESHOLD_PATH = ROOT / "part1" / "results" / "rf_threshold.json"
+
+try:
+    model = joblib.load(MODEL_PATH)
+except FileNotFoundError:
+    model = None
+
+try:
+    with open(THRESHOLD_PATH) as f:
+        t_star_rf = json.load(f)["t_star_rf"]
+except (FileNotFoundError, KeyError, json.JSONDecodeError):
+    t_star_rf = None
+
 # ==========================================
 # Tool 1: Return Risk
 # ==========================================
 def check_return_risk(order_features: dict) -> dict:
     """Loads Part 1 Random Forest and predicts return risk bucket."""
-    try:
-        model = joblib.load("models/return_risk_model.pkl")
-    except FileNotFoundError:
+    if model is None:
         return {"error": "Return risk model artifact not found."}
-        
-    df = pd.DataFrame([order_features])
-    prob = model.predict_proba(df)[0][1]
-    
-    # Risk bucket calibration anchored to t*_rf
-    t_star_rf = 0.36 
-    
-    if prob < t_star_rf:
+    if t_star_rf is None:
+        return {"error": "RF threshold artifact not found or invalid."}
+
+    probability = float(
+        model.predict_proba(
+            pd.DataFrame([order_features])
+        )[0, 1]
+    )
+
+    low_cutoff = t_star_rf
+    high_cutoff = t_star_rf + 0.15
+
+    if probability < low_cutoff:
         bucket = "Low"
-    elif t_star_rf <= prob < (t_star_rf + 0.15):
+    elif probability < high_cutoff:
         bucket = "Medium"
     else:
         bucket = "High"
-        
+
     return {
-        "return_probability": round(prob, 4),
+        "return_probability": probability,
         "risk_bucket": bucket,
-        "t_star_rf_used": t_star_rf
+        "t_star_rf": float(t_star_rf),
+        "low_cutoff": float(low_cutoff),
+        "high_cutoff": float(high_cutoff)
     }
 
 # ==========================================

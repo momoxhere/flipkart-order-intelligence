@@ -1,12 +1,14 @@
 # Test 6
 
-**User:** What about its category?
+New conversation
+
+**User:** What is its return risk?
 
 **Agent JSON Response:**
 ```json
 {
-  "answer": "REFUSE. Top retrieved distance: 1.43. Grounding threshold: 1.35. I cannot answer ungrounded policy questions.",
-  "source": "policy_kb",
+  "answer": "I don't have an order ID in this conversation.",
+  "source": "return_risk_tool",
   "confidence": 0.0
 }
 ```
