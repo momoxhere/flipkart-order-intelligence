@@ -240,27 +240,30 @@ def check_prompt_injection(query: str) -> bool:
 def intent_node(state: AgentState):
     """Classifies intent using the explicit 4S system prompt and few-shot rules."""
     query = state["current_query"]
-    state["system_prompt"] = SYSTEM_PROMPT
-    state["intent"] = mock_llm_intent(query, system_prompt=SYSTEM_PROMPT)
-    return state
+
+    if check_prompt_injection(query):
+        return {
+            **state,
+            "prompt_injection_flag": True,
+            "intent": "blocked"
+        }
 
     order_id = extract_order_id(query)
-    if order_id:
-        state["order_id"] = order_id
-
     image_path = extract_image_path(query)
-    if image_path:
-        state["image_path"] = image_path
-    
-    if check_prompt_injection(query):
-        return {"prompt_injection_flag": True, "intent": "blocked"}
-        
-    intent = mock_llm_intent(query)
-    result = {"intent": intent, "prompt_injection_flag": False}
+
+    result = {
+        **state,
+        "system_prompt": SYSTEM_PROMPT,
+        "intent": mock_llm_intent(query, system_prompt=SYSTEM_PROMPT),
+        "prompt_injection_flag": False
+    }
+
     if order_id:
         result["order_id"] = order_id
+
     if image_path:
         result["image_path"] = image_path
+
     return result
 
 GROUNDING_THRESHOLD = 1.35
