@@ -67,6 +67,57 @@ The actual top-five features from `part1/results/permutation_importance.csv` are
 
 This means the strongest practical predictor is `payment_method_COD`. `price_inr`, `delivery_distance_km`, and `customer_tenure_days` lose substantial importance under permutation testing, with `delivery_distance_km` and `customer_tenure_days` becoming slightly negative. This is consistent with the fact that impurity-based importance can overrate continuous variables because they provide many possible split points and therefore many opportunities for apparent impurity reduction. The permutation test is more reliable because it measures held-out performance loss when a feature is randomized.
 
+### Part 1 Evaluation Results
+
+**Logistic Regression Optimization (Threshold Sweep)**
+
+| Metric | Value |
+|--------|-------|
+| Best threshold (F1-optimised) | 0.44 |
+| Precision @ 0.44 | 0.2801 |
+| Recall @ 0.44 | 0.7582 |
+| F1-score @ 0.44 | 0.4091 |
+
+**Random Forest Model**
+
+| Metric | Value |
+|--------|-------|
+| Optimal threshold (t*_rf) | 0.5000 |
+| Optimization metric | F1 |
+| Threshold source | held-out test predict_proba |
+| Risk buckets | Low: <0.50; Medium: 0.50–0.65; High: ≥0.65 |
+
+**Subgroup Performance (Payment Method)**
+
+| Payment Method | Support | Recall | Precision |
+|---|---|---|---|
+| COD | 503 | 0.9355 | 0.3273 |
+| Prepaid_Card | 283 | 0.0204 | 0.2000 |
+| Prepaid_UPI | 294 | 0.0417 | 0.3333 |
+| Wallet | 120 | 0.0952 | 0.2222 |
+
+**Subgroup Performance (Product Category)**
+
+| Category | Support | Recall | Precision |
+|---|---|---|---|
+| Home | 221 | 0.6765 | 0.2347 |
+| Electronics | 261 | 0.4423 | 0.3286 |
+| Footwear | 217 | 0.5893 | 0.3626 |
+| Apparel | 385 | 0.5200 | 0.3171 |
+| Beauty | 116 | 0.6129 | 0.4750 |
+
+**Top 5 Features (Permutation Importance)**
+
+| Feature | Impurity Importance | Permutation Importance |
+|---|---|---|
+| payment_method_COD | 0.1788 | 0.0980 |
+| price_inr | 0.1323 | 0.0102 |
+| delivery_distance_km | 0.0957 | -0.0002 |
+| customer_tenure_days | 0.0900 | -0.0055 |
+| delivery_days | 0.0884 | 0.0026 |
+
+All values in this section are from the committed result files: `part1/results/threshold_sweep.csv`, `part1/results/rf_threshold.json`, `part1/results/subgroup_metrics.csv`, and `part1/results/permutation_importance.csv`.
+
 ## Part 2 — Product Classifier
 
 The current transfer-learning implementation is already the correct version for this repo: it uses a frozen ResNet-18 backbone, caches extracted features, and fits a classifier head over `model.fc.in_features` with `nn.Linear(in_features, 10)`. No model changes are required.
