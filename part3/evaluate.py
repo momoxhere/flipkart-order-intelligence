@@ -23,21 +23,24 @@ def evaluate_retrieval():
     for item in queries:
         q = item["query"]
         relevant_docs = set(item["relevant_documents"])
-        
-        # Retrieve top 3 and deduplicate at the document level
+
         q_emb = embedder.encode([q]).astype('float32')
-        _, indices = index.search(q_emb, 3)
-        
+        _, indices = index.search(q_emb, 10)
+
+        seen = set()
         retrieved_doc_ids = []
         for idx in indices[0]:
             if idx == -1:
                 continue
             doc_id = chunk_metadata[idx].get("doc_id") or chunk_metadata[idx].get("document_id")
-            if doc_id and doc_id not in retrieved_doc_ids:
+            if doc_id and doc_id not in seen:
+                seen.add(doc_id)
                 retrieved_doc_ids.append(doc_id)
+            if len(retrieved_doc_ids) == 3:
+                break
 
-        # Calculate P@3 and R@3 using unique document retrieval
-        intersection = relevant_docs.intersection(retrieved_doc_ids)
+        top_3_docs = retrieved_doc_ids[:3]
+        intersection = relevant_docs.intersection(top_3_docs)
         p_at_3 = len(intersection) / 3.0
         r_at_3 = len(intersection) / len(relevant_docs) if relevant_docs else 0.0
         
@@ -84,19 +87,28 @@ def run_and_save_transcript(test_num, filename, query, state=None, note=None):
         state.setdefault("tool_output", {})
         state.setdefault("final_response", {})
         state.setdefault("prompt_injection_flag", False)
-        
+
     result = app.invoke(state)
-    
+
     content = f"# Test {test_num}\n"
     if note:
         content += f"\n{note}\n"
-    content += f"\n**User:** {query}\n\n**Agent JSON Response:**\n```json\n"
+    content += f"\n**User:** {query}\n\n"
+
+    grounding = result.get("grounded")
+    if grounding is not None or "best_distance" in result or "threshold" in result:
+        content += "### Grounding Check\n\n"
+        content += f"Best retrieval distance: {result.get('best_distance')}\n"
+        content += f"Grounding threshold: {result.get('threshold')}\n"
+        content += f"Grounded: {result.get('grounded')}\n\n"
+
+    content += "**Agent JSON Response:**\n```json\n"
     content += json.dumps(result["final_response"], indent=2)
     content += "\n```\n"
-    
+
     with open(f"transcripts/{filename}", "w") as f:
         f.write(content)
-    
+
     return result
 
 def generate_all_transcripts():

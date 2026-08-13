@@ -4,6 +4,12 @@ This transcript demonstrates state persistence across image classification and a
 
 **User:** Is that eligible for return?
 
+### Grounding Check
+
+Best retrieval distance: 0.9530423863362549
+Grounding threshold: 1.35
+Grounded: True
+
 **Agent JSON Response:**
 ```json
 {

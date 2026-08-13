@@ -2,6 +2,12 @@
 
 **User:** What is Flipkart's policy for moon deliveries?
 
+### Grounding Check
+
+Best retrieval distance: 1.1586645021140363
+Grounding threshold: 1.35
+Grounded: True
+
 **Agent JSON Response:**
 ```json
 {

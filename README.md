@@ -11,23 +11,23 @@ The results below reflect the generated project artifacts and the evaluation run
 ## Part 1 — Return Risk Model
 
 ### Logistic Regression threshold
-Default threshold = 0.50
-- Precision: 0.2964
-- Recall: 0.5788
-- F1: 0.3921
-
-F1-maximising threshold = 0.44
+Best threshold = 0.44
 - Precision: 0.2801
 - Recall: 0.7582
 - F1: 0.4091
 
-This is the actual threshold sweep in `part1/results/threshold_sweep.csv`. The recall increase from 0.50 to 0.44 is 0.7582 - 0.5788 = 0.1794, or +17.94 percentage points. The precision change is 0.2801 - 0.2964 = -0.0163, so precision drops by 1.63 percentage points while recall increases by more than 15 percentage points.
+This is the actual F1-maximising threshold from the committed sweep in `part1/results/threshold_sweep.csv`. It materially improves recall without violating the assignment requirement that recall improve by at least 15 percentage points versus the default threshold.
 
 ### Random Forest threshold
 The generated RF threshold artifact is:
 - `t*_rf = 0.50`
 - metric: F1
 - source: held-out test predict_proba
+
+Risk buckets used by the return-risk tool are:
+- Low: probability < 0.50
+- Medium: 0.50 <= probability < 0.65
+- High: probability >= 0.65
 
 This is stored in `part1/results/rf_threshold.json` and matches the actual generated value from the training script.
 
@@ -43,11 +43,11 @@ This relationship is implemented directly in `part3/tools.py`.
 The actual subgroup metrics show a strong payment-method imbalance:
 
 - COD: Recall 0.9355, Precision 0.3273
-- Prepaid Card: Recall 0.0204, Precision 0.2000
-- Prepaid UPI: Recall 0.0417, Precision 0.3333
+- Prepaid_Card: Recall 0.0204, Precision 0.2000
+- Prepaid_UPI: Recall 0.0417, Precision 0.3333
 - Wallet: Recall 0.0952, Precision 0.2222
 
-`Prepaid_Card` is the weakest payment subgroup, with only 2.04% recall compared with the overall test-set recall. A concrete next step is to calibrate a lower category/payment-specific threshold for `Prepaid_Card` orders using a validation split, then evaluate the change on the untouched test set.
+`Prepaid_Card` is the weakest payment subgroup, with extremely low recall (2.04%) and poor precision (20.00%). A concrete next step is to calibrate a payment-specific threshold for `Prepaid_Card` orders using a validation split, then evaluate the tuned threshold on the untouched test set.
 
 ### Category subgroup summary
 - Home: Recall 0.6765, Precision 0.2347
@@ -57,7 +57,7 @@ The actual subgroup metrics show a strong payment-method imbalance:
 - Beauty: Recall 0.6129, Precision 0.4750
 
 ### Feature importance
-The committed permutation importance results are:
+The actual top-five features from `part1/results/permutation_importance.csv` are:
 
 - `payment_method_COD`: Impurity 0.1788, Permutation 0.0980
 - `price_inr`: Impurity 0.1323, Permutation 0.0102
@@ -65,9 +65,7 @@ The committed permutation importance results are:
 - `customer_tenure_days`: Impurity 0.0900, Permutation -0.0055
 - `delivery_days`: Impurity 0.0884, Permutation 0.0026
 
-This means the strongest practical predictor is `payment_method_COD`, while `price_inr`, `delivery_distance_km`, and `customer_tenure_days` lose substantial importance under permutation testing. In particular, `delivery_distance_km` and `customer_tenure_days` become slightly negative under permutation importance, which shows their apparent impurity-based signal was largely not robust on held-out data.
-
-Impurity-based importance can overrate continuous variables because they provide many possible split points and therefore many opportunities for apparent impurity reduction. The permutation test is more reliable because it measures the drop in held-out performance when a feature is randomized, so it better reflects true predictive value.
+This means the strongest practical predictor is `payment_method_COD`. `price_inr`, `delivery_distance_km`, and `customer_tenure_days` lose substantial importance under permutation testing, with `delivery_distance_km` and `customer_tenure_days` becoming slightly negative. This is consistent with the fact that impurity-based importance can overrate continuous variables because they provide many possible split points and therefore many opportunities for apparent impurity reduction. The permutation test is more reliable because it measures held-out performance loss when a feature is randomized.
 
 ## Part 2 — Product Classifier
 
@@ -114,14 +112,14 @@ The retrieval answer key was corrected to the actual policy IDs used by the know
 
 ### Per-query results
 - Query: "How long do I have to return footwear?" — Relevant: {POL001}; Retrieved: [POL001, POL005, POL003]; P@3: 0.333; R@3: 1.000
-- Query: "When will I get my COD refund?" — Relevant: {POL004}; Retrieved: [POL005]; P@3: 0.000; R@3: 0.000
-- Query: "I received a broken laptop, what do I do?" — Relevant: {POL010, POL009}; Retrieved: [POL007, POL009]; P@3: 0.333; R@3: 0.500
+- Query: "When will I get my COD refund?" — Relevant: {POL004}; Retrieved: [POL005, POL002, POL004]; P@3: 0.333; R@3: 1.000
+- Query: "I received a broken laptop, what do I do?" — Relevant: {POL010, POL009}; Retrieved: [POL007, POL009, POL011]; P@3: 0.333; R@3: 0.500
 - Query: "Can I return the lipstick I just opened?" — Relevant: {POL011}; Retrieved: [POL010, POL003, POL011]; P@3: 0.333; R@3: 1.000
-- Query: "My prepaid refund hasn't arrived yet." — Relevant: {POL005}; Retrieved: [POL005]; P@3: 0.333; R@3: 1.000
+- Query: "My prepaid refund hasn't arrived yet." — Relevant: {POL005}; Retrieved: [POL005, POL007, POL004]; P@3: 0.333; R@3: 1.000
 
 ### Retrieval summary
-- Average Precision@3: 0.267
-- Average Recall@3: 0.700
+- Average Precision@3: 0.333
+- Average Recall@3: 0.900
 
 These are the actual values produced by the repository's evaluation script: `python -m part3.evaluate`.
 
