@@ -344,6 +344,22 @@ def response_node(state: AgentState):
             "source": "policy_kb",
             "confidence": 1.0
         }}
+
+    if state.get("intent") == "policy" and not state.get("grounded", False):
+        return {
+            **state,
+            "final_response": {
+                "answer": (
+                    f"REFUSE. Top retrieved distance: "
+                    f"{state.get('best_distance'):.2f}. "
+                    f"Grounding threshold: "
+                    f"{state.get('threshold'):.2f}. "
+                    "I cannot answer an ungrounded policy question."
+                ),
+                "source": "policy_kb",
+                "confidence": 0.0
+            }
+        }
         
     response = generate_response(
         intent=state.get("intent"),
