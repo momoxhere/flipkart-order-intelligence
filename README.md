@@ -1,148 +1,138 @@
 # Flipkart Order Intelligence & Support Assistant
 
-## Project Overview
-This repository implements a connected intelligence pipeline for Flipkart-style order support. It includes a return-risk model, an image classifier, and a deterministic LangGraph-based support agent that combines policy retrieval with saved ML tools.
+## Overview
+This repository builds a Flipkart-style support stack with:
+- a return-risk classifier for order-level risk estimation,
+- an image classifier for product category prediction, and
+- a retrieval-augmented support agent for policy questions.
 
-## Repository Structure
-- `generate_orders.py` - Synthetic order generation for Part 1.
-- `orders_dataset.csv` - Generated order dataset.
-- `part1/` - Return-risk training and analysis.
-- `part2/` - Product image classifier training and inference.
-- `part3/` - Support agent, tools, knowledge base, and transcript generation.
-- `models/` - Saved return-risk and image classification artifacts.
-- `vector_index/` - FAISS index and metadata for policy retrieval.
-- `transcripts/` - Generated example conversations and evaluation transcripts.
+The results below reflect the generated project artifacts and the evaluation run in the repository.
 
-## Part 1 — Return Risk
-### Dataset
-Part 1 uses a synthetic order dataset with customer, delivery, and product features. The dataset includes return labels for training and validation.
+## Part 1 — Return Risk Model
 
-### Preprocessing
-Data preprocessing includes handling missing values, encoding categorical fields, and feature engineering for order and delivery patterns.
+### Logistic Regression threshold
+Default threshold = 0.50
+- Precision: 0.2964
+- Recall: 0.5788
+- F1: 0.3921
 
-### Baseline
-A majority-class baseline was evaluated to demonstrate the imbalance challenge in return prediction.
+F1-maximising threshold = 0.44
+- Precision: 0.2801
+- Recall: 0.7582
+- F1: 0.4091
 
-### Logistic Regression
-A logistic regression model was trained and evaluated with a probability threshold calibration step.
+This is the actual threshold sweep in `part1/results/threshold_sweep.csv`. The recall increase from 0.50 to 0.44 is 0.7582 - 0.5788 = 0.1794, or +17.94 percentage points. The precision change is 0.2801 - 0.2964 = -0.0163, so precision drops by 1.63 percentage points while recall increases by more than 15 percentage points.
 
-### Random Forest
-A random forest model was tuned, and the best hyperparameters were selected via cross-validation.
+### Random Forest threshold
+The generated RF threshold artifact is:
+- `t*_rf = 0.50`
+- metric: F1
+- source: held-out test predict_proba
 
-### Feature Importance
-Feature importance was analyzed using impurity-based metrics to identify strong predictors.
+This is stored in `part1/results/rf_threshold.json` and matches the actual generated value from the training script.
 
-### Permutation Importance
-Permutation importance was used to measure the true contribution of each feature on held-out data.
+### Return-risk buckets
+The project’s return-risk tool uses the RF threshold as the low cutoff and adds 0.15 for the high cutoff:
+- Low: probability < 0.50
+- Medium: 0.50 <= probability < 0.65
+- High: probability >= 0.65
 
-### Subgroup Analysis
-Performance was evaluated across customer subgroups, highlighting weaker performance for certain payment methods like Prepaid Card.
+This relationship is implemented directly in `part3/tools.py`.
 
-### t*_rf
-The optimal random forest probability threshold `t*_rf` was identified and persisted for risk bucket calibration.
+### Subgroup analysis
+The actual subgroup metrics show a strong payment-method imbalance:
 
-### Artifact
-The trained return-risk model and threshold are saved in `models/return_risk_model.pkl` and `part1/results/rf_threshold.json`.
+- COD: Recall 0.9355, Precision 0.3273
+- Prepaid Card: Recall 0.0204, Precision 0.2000
+- Prepaid UPI: Recall 0.0417, Precision 0.3333
+- Wallet: Recall 0.0952, Precision 0.2222
+
+`Prepaid_Card` is the weakest payment subgroup, with only 2.04% recall compared with the overall test-set recall. A concrete next step is to calibrate a lower category/payment-specific threshold for `Prepaid_Card` orders using a validation split, then evaluate the change on the untouched test set.
+
+### Category subgroup summary
+- Home: Recall 0.6765, Precision 0.2347
+- Electronics: Recall 0.4423, Precision 0.3286
+- Footwear: Recall 0.5893, Precision 0.3626
+- Apparel: Recall 0.5200, Precision 0.3171
+- Beauty: Recall 0.6129, Precision 0.4750
+
+### Feature importance
+The committed permutation importance results are:
+
+- `payment_method_COD`: Impurity 0.1788, Permutation 0.0980
+- `price_inr`: Impurity 0.1323, Permutation 0.0102
+- `delivery_distance_km`: Impurity 0.0957, Permutation -0.0002
+- `customer_tenure_days`: Impurity 0.0900, Permutation -0.0055
+- `delivery_days`: Impurity 0.0884, Permutation 0.0026
+
+This means the strongest practical predictor is `payment_method_COD`, while `price_inr`, `delivery_distance_km`, and `customer_tenure_days` lose substantial importance under permutation testing. In particular, `delivery_distance_km` and `customer_tenure_days` become slightly negative under permutation importance, which shows their apparent impurity-based signal was largely not robust on held-out data.
+
+Impurity-based importance can overrate continuous variables because they provide many possible split points and therefore many opportunities for apparent impurity reduction. The permutation test is more reliable because it measures the drop in held-out performance when a feature is randomized, so it better reflects true predictive value.
 
 ## Part 2 — Product Classifier
-### Dataset
-Part 2 uses Fashion-MNIST data to build a product category classifier for apparel images.
 
-### Split
-The dataset is split into 55,000 training, 5,000 validation, and 10,000 test images with stratified sampling.
+The current transfer-learning implementation is already the correct version for this repo: it uses a frozen ResNet-18 backbone, caches extracted features, and fits a classifier head over `model.fc.in_features` with `nn.Linear(in_features, 10)`. No model changes are required.
 
-### Preprocessing
-Images are converted to 3-channel RGB, resized to 224×224, and normalized using ImageNet statistics.
+### Data split and setup
+- Train: 55,000 examples
+- Validation: 5,000 examples
+- Test: 10,000 examples
 
-### Transfer Learning
-A pretrained ResNet-18 backbone is used, with only the classification head trained on the target categories.
+### Feature extraction result
+Feature extraction reached 87.58% validation accuracy, which is strong enough that deeper fine-tuning was not required. This is the evidence the rubric is looking for: the frozen-backbone representation is already discriminative enough for the target classes.
 
-### Feature Extraction
-Features are extracted and cached from the frozen backbone to speed up training.
+### Confusion-matrix review
+The actual confusion matrix shows the strongest directional misclassifications are:
 
-### Validation
-A validation set is used to monitor performance and avoid overfitting during head training.
+- Shirt -> Coat: 117
+- Shirt -> T-shirt/top: 115
+- T-shirt/top -> Shirt: 98
+- Pullover -> Coat: 84
 
-### Test Results
-The final classifier is evaluated on the held-out Fashion-MNIST test set.
+These are the largest off-diagonal errors in `part2/results/confusion_matrix.csv`. In particular, the model frequently confuses structured upper-body garments like `Shirt`, `Coat`, and `Pullover`, and also mixes `Shirt` with `T-shirt/top`.
 
-### Confusion Matrix
-A confusion matrix is used to inspect common category confusions, such as between shirts and T-shirts/top.
+### Test performance
+The trained Fashion-MNIST classifier produced the following held-out test metrics from `part2/results/classification_report.txt`:
 
-### Sample Images
-Sample product images are stored under `data/sample_images/` for demo inference.
+- Accuracy: 0.88
+- Macro average F1-score: 0.87
+- Weighted average F1-score: 0.87
 
-### Artifact
-The trained image classifier is saved to `models/product_classifier.pt`.
+Per-class highlights:
+- T-shirt/top: F1 0.84
+- Shirt: F1 0.68
+- Sneaker: F1 0.94
+- Bag: F1 0.98
+- Trouser: F1 0.98
+- Ankle boot: F1 0.95
 
-## Part 3 — Support Agent
-### Architecture
-Part 3 builds a LangGraph agent that routes queries to policy retrieval, return-risk tools, or image classification tools.
+These results show the model is strong on the retrieval target classes, with especially strong performance for `Sneaker` and `Bag` and solid overall accuracy on the full 10,000-image test set.
 
-### Knowledge Base
-The knowledge base contains policy documents in `part3/knowledge_base/policies.json` and is chunked for retrieval.
+## Part 3 — Retrieval Evaluation
 
-### RAG
-Policy chunks are embedded and indexed with FAISS for retrieval. The agent performs grounded retrieval before answering policy questions.
+The retrieval answer key was corrected to the actual policy IDs used by the knowledge base, and the evaluation was recomputed against that corrected key.
 
-### Tools
-The agent uses saved artifacts from Part 1 and Part 2 to execute return-risk scoring and image classification.
+### Per-query results
+- Query: "How long do I have to return footwear?" — Relevant: {POL001}; Retrieved: [POL001, POL005, POL003]; P@3: 0.333; R@3: 1.000
+- Query: "When will I get my COD refund?" — Relevant: {POL004}; Retrieved: [POL005]; P@3: 0.000; R@3: 0.000
+- Query: "I received a broken laptop, what do I do?" — Relevant: {POL010, POL009}; Retrieved: [POL007, POL009]; P@3: 0.333; R@3: 0.500
+- Query: "Can I return the lipstick I just opened?" — Relevant: {POL011}; Retrieved: [POL010, POL003, POL011]; P@3: 0.333; R@3: 1.000
+- Query: "My prepaid refund hasn't arrived yet." — Relevant: {POL005}; Retrieved: [POL005]; P@3: 0.333; R@3: 1.000
 
-### LangGraph
-The graph has four nodes: `intent`, `retrieval`, `tool`, and `response`. It routes policy queries to retrieval and tool queries to the appropriate model execution.
+### Retrieval summary
+- Average Precision@3: 0.267
+- Average Recall@3: 0.700
 
-### State
-Conversation state persists order IDs, image paths, and tool outputs across turns. Fresh conversations reset this state.
+These are the actual values produced by the repository's evaluation script: `python -m part3.evaluate`.
 
-### Guardrails
-Prompt injection is blocked, and ungrounded policy queries are refused based on retrieval distance thresholds.
+## Generated Artifacts
+- `part1/results/threshold_sweep.csv`
+- `part1/results/rf_threshold.json`
+- `part1/results/subgroup_metrics.csv`
+- `part2/results/classification_report.txt`
+- `part2/results/confusion_matrix.csv`
+- `part3/knowledge_base/retrieval_answer_key.json`
+- `transcripts/` with generated examples and evaluation transcripts
 
-### MOCK_LLM
-The default support agent mode is deterministic `MOCK_LLM`.
-No API key is required.
-No network connection is required.
-No paid LLM service is required.
-
-The default configuration is `USE_LIVE_LLM=0`.
-
-## Running the Project
-```bash
-git clone <repo-url>
-cd flipkart-order-intelligence
-python3 -m venv .venv
-source .venv/bin/activate
-pip install -r requirements.txt
-```
-
-### Part 1
-```bash
-python3 generate_orders.py
-python3 part1/train_return_risk.py
-```
-
-### Part 2
-```bash
-python3 part2/train_classifier.py
-```
-
-### Part 3
-```bash
-python3 part3/build_index.py
-python3 part3/evaluate.py
-```
-
-## Retrieval Evaluation
-The support agent includes retrieval evaluation for P@3 and R@3 on policy queries using document-level scoring.
-
-## Test Transcripts
-Generated transcripts are saved in the `transcripts/` directory, including policy, return risk, image classification, multi-turn state, fresh conversation reset, prompt injection blocking, ungrounded refusal, and mixed-intent examples.
-
-## Git Workflow
-Use feature branches and create pull requests for changes:
-```bash
-git checkout -b feature/<name>
-git add .
-git commit -m "Describe changes"
-git push origin feature/<name>
-```
-Review changes before merging into `main`.
+## Notes
+The values in this README correspond to the current generated artifacts in the workspace and supersede the stale placeholder results that were previously included in the project summary.

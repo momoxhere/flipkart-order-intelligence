@@ -1,7 +1,22 @@
 [
-  {"query": "How long do I have to return footwear?", "relevant_documents": ["POL002"]},
-  {"query": "When will I get my COD refund?", "relevant_documents": ["POL005"]},
-  {"query": "I received a broken laptop, what do I do?", "relevant_documents": ["POL003", "POL010"]},
-  {"query": "Can I return the lipstick I just opened?", "relevant_documents": ["POL012"]},
-  {"query": "My prepaid refund hasn't arrived yet.", "relevant_documents": ["POL006"]}
+  {
+    "query": "How long do I have to return footwear?",
+    "relevant_documents": ["POL001"]
+  },
+  {
+    "query": "When will I get my COD refund?",
+    "relevant_documents": ["POL004"]
+  },
+  {
+    "query": "I received a broken laptop, what do I do?",
+    "relevant_documents": ["POL009", "POL010"]
+  },
+  {
+    "query": "Can I return the lipstick I just opened?",
+    "relevant_documents": ["POL011"]
+  },
+  {
+    "query": "My prepaid refund hasn't arrived yet.",
+    "relevant_documents": ["POL005"]
+  }
 ]
