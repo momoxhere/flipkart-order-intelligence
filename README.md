@@ -159,3 +159,16 @@ The automated evaluation generates structured transcripts in the transcripts/ di
 08_ungrounded_policy.md – Output-side L2 grounding check and refusal.
 
 09_image_return_eligibility_part1.md / 09_image_return_eligibility_part2.md – Multimodal image + policy grounding.
+
+### Baseline and Model Comparison
+
+| Model | Accuracy | F1 | Recall | Precision | ROC-AUC |
+|---|---:|---:|---:|---:|---:|
+| DummyClassifier | YOUR_VALUE | 0.0000 | 0.0000 | 0.0000 | N/A |
+| Logistic Regression (0.5) | YOUR_VALUE | YOUR_VALUE | YOUR_VALUE | YOUR_VALUE | YOUR_VALUE |
+
+### Random Forest Grid Search
+
+- Best parameters: `YOUR_PARAMS`
+- Best 5-fold CV ROC-AUC: `YOUR_VALUE`
+- Held-out test ROC-AUC: `YOUR_VALUE`
