@@ -1,4 +1,3 @@
-# part3/agent.py
 import os
 import json
 import faiss
@@ -14,24 +13,19 @@ from part3.tools import check_return_risk, classify_product_image
 class AgentState(TypedDict, total=False):
     messages: list
     current_query: str
-
     intent: str
-
     order_id: str | None
     order_features: dict | None
-
     image_path: str | None
-
     retrieved_chunks: list
     grounding_score: float
     grounded: bool
     best_distance: float
     threshold: float
-
     tool_output: dict
     final_response: dict
-
     prompt_injection_flag: bool
+
 
 ROOT = Path(__file__).resolve().parents[1]
 with open(ROOT / "data" / "demo_orders.json", "r") as f:
@@ -99,7 +93,6 @@ FEW_SHOT_EXAMPLES = [
     for example in FEW_SHOT_INTENT_EXAMPLES
 ]
 
-
 RISK_PATTERNS = [
     "return risk",
     "risk of return",
@@ -133,6 +126,7 @@ def mock_llm_intent(query: str, system_prompt: str = SYSTEM_PROMPT) -> str:
         return "image_classification"
 
     return "policy"
+
 
 USE_LIVE_LLM = os.getenv("USE_LIVE_LLM", "0") == "1"
 print("LLM mode:", "LIVE" if USE_LIVE_LLM else "MOCK_LLM")
@@ -226,45 +220,52 @@ def generate_response(
         "Live LLM mode is optional and not enabled in this project."
     )
 
+
 # --- 2. SETUP RETRIEVAL ---
 embedder = SentenceTransformer("all-MiniLM-L6-v2")
 index = faiss.read_index("vector_index/faiss.index")
 with open("vector_index/chunk_metadata.json", "r") as f:
     chunk_metadata = json.load(f)
 
+
 def check_prompt_injection(query: str) -> bool:
     malicious_phrases = ["ignore previous", "ignore all rules", "pretend you are"]
     return any(phrase in query.lower() for phrase in malicious_phrases)
 
+
 # --- 3. NODES ---
+
 def intent_node(state: AgentState):
     """Classifies intent using the explicit 4S system prompt and few-shot rules."""
     query = state["current_query"]
 
+    # Input-side prompt-injection guard
     if check_prompt_injection(query):
         return {
             **state,
             "prompt_injection_flag": True,
-            "intent": "blocked"
+            "intent": "blocked",
         }
 
     order_id = extract_order_id(query)
     image_path = extract_image_path(query)
 
-    result = {
-        **state,
-        "system_prompt": SYSTEM_PROMPT,
-        "intent": mock_llm_intent(query, system_prompt=SYSTEM_PROMPT),
-        "prompt_injection_flag": False
-    }
+    state["system_prompt"] = SYSTEM_PROMPT
+
+    state["intent"] = mock_llm_intent(
+        query, system_prompt=SYSTEM_PROMPT
+    )
 
     if order_id:
-        result["order_id"] = order_id
+        state["order_id"] = order_id
 
     if image_path:
-        result["image_path"] = image_path
+        state["image_path"] = image_path
 
-    return result
+    state["prompt_injection_flag"] = False
+
+    return state
+
 
 GROUNDING_THRESHOLD = 1.35
 
@@ -272,31 +273,32 @@ GROUNDING_THRESHOLD = 1.35
 def retrieval_node(state: AgentState):
     """RAG Retrieval with explicit L2 grounding."""
     query = state["current_query"]
-    query_embedding = embedder.encode([query]).astype('float32')
+    query_embedding = embedder.encode([query]).astype("float32")
     distances, indices = index.search(query_embedding, 3)
 
     retrieved = []
-    best_distance = float('inf')
-    
+    best_distance = float("inf")
+
     for dist, idx in zip(distances[0], indices[0]):
         if idx != -1:
             retrieved.append(chunk_metadata[idx])
             best_distance = min(best_distance, float(dist))
 
-    best_distance = float(np.sqrt(best_distance)) if best_distance != float('inf') else best_distance
+    best_distance = float(np.sqrt(best_distance)) if best_distance != float("inf") else best_distance
     grounded = best_distance <= GROUNDING_THRESHOLD
     return {
         "retrieved_chunks": retrieved,
         "grounded": grounded,
         "best_distance": best_distance,
-        "threshold": GROUNDING_THRESHOLD
+        "threshold": GROUNDING_THRESHOLD,
     }
+
 
 def tool_node(state: AgentState):
     """Executes tools and persists state."""
     intent = state.get("intent")
     query = state["current_query"]
-    
+
     # Extract entities for state persistence
     order_id = state.get("order_id") or extract_order_id(query)
     img_path = state.get("image_path", "00_tshirt_top.png")
@@ -311,7 +313,7 @@ def tool_node(state: AgentState):
                 "tool_output": {
                     "error": "No order ID in current conversation."
                 },
-                "order_id": None
+                "order_id": None,
             }
 
         features = get_order_features(order_id)
@@ -321,30 +323,35 @@ def tool_node(state: AgentState):
                 "tool_output": {
                     "error": f"Order {order_id} is not available in the demo order fixture."
                 },
-                "order_id": order_id
+                "order_id": order_id,
             }
 
         output = check_return_risk(features)
         output["processed_order_id"] = order_id
-        
+
     elif intent == "image_classification":
         output = classify_product_image(f"data/sample_images/{img_path}")
         output["processed_image"] = img_path
-        
+
     return {"tool_output": output, "order_id": order_id, "image_path": img_path}
+
 
 def response_node(state: AgentState):
     """Deterministic response generation with optional live LLM fallback."""
     if state.get("prompt_injection_flag"):
-        return {"final_response": {
-            "answer": (
-                "I can't follow instructions that attempt to override "
-                "the support assistant's rules."
-            ),
-            "source": "policy_kb",
-            "confidence": 1.0
-        }}
+        return {
+            **state,
+            "final_response": {
+                "answer": (
+                    "I can't follow instructions that attempt to override "
+                    "the support assistant's rules."
+                ),
+                "source": "policy_kb",
+                "confidence": 1.0,
+            },
+        }
 
+    # Output-side grounding guard
     if state.get("intent") == "policy" and not state.get("grounded", False):
         return {
             **state,
@@ -357,17 +364,18 @@ def response_node(state: AgentState):
                     "I cannot answer an ungrounded policy question."
                 ),
                 "source": "policy_kb",
-                "confidence": 0.0
-            }
+                "confidence": 0.0,
+            },
         }
-        
+
     response = generate_response(
         intent=state.get("intent"),
         retrieved_chunks=state.get("retrieved_chunks"),
-        tool_output=state.get("tool_output")
+        tool_output=state.get("tool_output"),
     )
 
     return {**state, "final_response": response}
+
 
 # --- 4. BUILD GRAPH ---
 workflow = StateGraph(AgentState)
@@ -378,12 +386,14 @@ workflow.add_node("response", response_node)
 
 workflow.set_entry_point("intent")
 
+
 def route_intent(state: AgentState):
     if state.get("prompt_injection_flag"):
         return "response"
     if state["intent"] == "policy":
         return "retrieval"
     return "tool"
+
 
 workflow.add_conditional_edges("intent", route_intent, ["retrieval", "tool", "response"])
 workflow.add_edge("retrieval", "response")
